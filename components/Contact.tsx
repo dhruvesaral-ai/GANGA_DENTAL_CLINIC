@@ -1,18 +1,40 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Phone, MapPin, Clock, Send, CheckCircle2 } from "lucide-react";
+import ApiMethod from "@/services/api-method";
+
+type Treatment = {
+  _id: string;
+  name: string;
+};
 
 export default function Contact() {
+  const [treatments, setTreatments] = useState<Treatment[]>([]);
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
-    service: "General Checkup",
+    preferredTreatment: "",
     date: "",
     message: "",
   });
 
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    ApiMethod.get("/api/treatments")
+      .then((result) => {
+        if (result.success && result.data.length > 0) {
+          setTreatments(result.data);
+          setFormData((prev) => ({
+            ...prev,
+            preferredTreatment: result.data[0]._id,
+          }));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -21,26 +43,44 @@ export default function Contact() {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.phone || !formData.date) {
+    if (!formData.name || !formData.phone || !formData.date || !formData.preferredTreatment) {
       setStatus("error");
+      setErrorMessage("Please fill out all required fields marked with *");
       return;
     }
 
     setStatus("submitting");
+    setErrorMessage("");
 
-    // Simulate API request
-    setTimeout(() => {
+    try {
+      const result = await ApiMethod.post("/api/book-appointment", {
+        name: formData.name,
+        phone: formData.phone,
+        message: formData.message,
+        preferredTreatment: formData.preferredTreatment,
+        preferredDate: formData.date,
+      });
+
+      if (!result.success) {
+        setStatus("error");
+        setErrorMessage(result.message || "Failed to book appointment");
+        return;
+      }
+
       setStatus("success");
       setFormData({
         name: "",
         phone: "",
-        service: "General Checkup",
+        preferredTreatment: treatments[0]?._id ?? "",
         date: "",
         message: "",
       });
-    }, 1200);
+    } catch {
+      setStatus("error");
+      setErrorMessage("Something went wrong. Please try again.");
+    }
   };
 
   return (
@@ -192,22 +232,26 @@ export default function Contact() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   {/* Service */}
                   <div className="space-y-2">
-                    <label htmlFor="service" className="block text-sm font-semibold text-slate-700 dark:text-slate-350">
+                    <label htmlFor="preferredTreatment" className="block text-sm font-semibold text-slate-700 dark:text-slate-350">
                       Preferred Treatment
                     </label>
                     <select
-                      id="service"
-                      name="service"
-                      value={formData.service}
+                      id="preferredTreatment"
+                      name="preferredTreatment"
+                      value={formData.preferredTreatment}
                       onChange={handleChange}
+                      required
                       className="w-full p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-850 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow"
                     >
-                      <option>General Checkup</option>
-                      <option>Root Canal Treatment</option>
-                      <option>Cosmetic Bonding / Veneers</option>
-                      <option>Braces / Aligners</option>
-                      <option>Dental Implants</option>
-                      <option>Teeth Whitening</option>
+                      {treatments.length === 0 ? (
+                        <option value="">Loading treatments...</option>
+                      ) : (
+                        treatments.map((treatment) => (
+                          <option key={treatment._id} value={treatment._id}>
+                            {treatment.name}
+                          </option>
+                        ))
+                      )}
                     </select>
                   </div>
 
@@ -246,7 +290,7 @@ export default function Contact() {
 
                 {status === "error" && (
                   <p className="text-red-500 text-sm font-bold">
-                    Please fill out all required fields marked with *
+                    {errorMessage}
                   </p>
                 )}
 
