@@ -5,18 +5,6 @@ const treatmentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    description: {
-        type: String,
-        required: true,
-    },
-    price: {
-        type: Number,
-        required: true,
-    },
-    image: {
-        type: String,
-        required: true,
-    },
     isActive: {
         type: Boolean,
         default: true,
