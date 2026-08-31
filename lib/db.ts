@@ -1,9 +1,25 @@
 import mongoose from "mongoose";
 
-export async function connectDB() {
-  if (mongoose.connection.readyState >= 1) return;
+declare global {
+  // eslint-disable-next-line no-var
+  var mongooseConn: Promise<typeof mongoose> | undefined;
+}
 
-  await mongoose.connect(process.env.DB_URI!, {
-    dbName: "ganga_dental_clinic",
-  });
+export async function connectDB() {
+  const uri = process.env.DB_URI;
+
+  if (!uri) {
+    throw new Error("DB_URI is not set in environment variables");
+  }
+
+  if (mongoose.connection.readyState >= 1) {
+    return mongoose.connection;
+  }
+
+  if (!global.mongooseConn) {
+    global.mongooseConn = mongoose.connect(uri);
+  }
+
+  await global.mongooseConn;
+  return mongoose.connection;
 }
