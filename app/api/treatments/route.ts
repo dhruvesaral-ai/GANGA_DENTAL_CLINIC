@@ -3,12 +3,15 @@ import { jsonError, jsonSuccess } from "@/lib/api";
 import { TreatmentModel } from "@/models/TreatmentModel";
 import { NextRequest } from "next/server";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     await connectDB();
 
-    const treatments = await TreatmentModel.find({ isActive: true })
-      .select("name description price image")
+    const showAll = request.nextUrl.searchParams.get("all") === "true";
+    const filter = showAll ? {} : { isActive: true };
+
+    const treatments = await TreatmentModel.find(filter)
+      .select("name description price image isActive createdAt updatedAt")
       .sort({ name: 1 })
       .lean();
 
