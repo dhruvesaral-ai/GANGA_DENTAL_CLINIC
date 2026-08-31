@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import "@/models/TreatmentModel";
 
 const enquirySchema = new mongoose.Schema({
     name: {

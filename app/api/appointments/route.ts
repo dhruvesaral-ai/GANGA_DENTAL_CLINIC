@@ -7,12 +7,16 @@ export async function GET() {
     await connectDB();
 
     const appointments = await EnquiryModel.find()
-      .populate("preferredTreatment", "name")
-      .select("name phone message preferredDate enquiryDate status createdAt")
       .sort({ createdAt: -1 })
+      .populate({ path: "preferredTreatment", select: "name" })
       .lean();
 
-    return jsonSuccess(appointments);
+    const normalized = appointments.map((appointment) => ({
+      ...appointment,
+      status: appointment.status ?? "pending",
+    }));
+
+    return jsonSuccess(normalized);
   } catch (error) {
     console.error("GET /api/appointments:", error);
     return jsonError("Failed to fetch appointments", 500);

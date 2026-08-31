@@ -29,14 +29,17 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
       { status },
       { new: true, runValidators: true }
     )
-      .populate("preferredTreatment", "name")
+      .populate({ path: "preferredTreatment", select: "name" })
       .lean();
 
     if (!appointment) {
       return jsonError("Appointment not found", 404);
     }
 
-    return jsonSuccess(appointment);
+    return jsonSuccess({
+      ...appointment,
+      status: appointment.status ?? "pending",
+    });
   } catch (error) {
     console.error("PUT /api/appointments/[id]:", error);
     return jsonError("Failed to update appointment", 500);
