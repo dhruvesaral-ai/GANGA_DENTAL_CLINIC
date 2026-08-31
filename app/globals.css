@@ -10,6 +10,7 @@
   --color-foreground: var(--foreground);
   
   --font-sans: var(--font-poppins), sans-serif;
+  --font-display: var(--font-playfair), serif;
   
   /* Brand Teal/Emerald Palette */
   --color-brand-50: #f0fdfa;

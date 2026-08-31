@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import ClinicName from "@/components/ClinicName";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -31,13 +31,7 @@ export default function Footer() {
           {/* Brand Info */}
           <div className="md:col-span-5 space-y-4">
             <div className="flex items-center">
-              <Image
-                src="/logo.png"
-                alt="Ganga Dental Clinic"
-                width={180}
-                height={44}
-                className="h-11 w-auto object-contain brightness-0 invert"
-              />
+              <ClinicName variant="light" />
             </div>
             <p className="text-sm leading-relaxed max-w-sm text-slate-400">
               Delivering clinical excellence with a gentle, patient-first approach. Your smile is our number one priority.

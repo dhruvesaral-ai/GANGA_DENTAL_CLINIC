@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import { Menu, X, Phone, Calendar } from "lucide-react";
+import ClinicName from "@/components/ClinicName";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -52,14 +52,7 @@ export default function Header() {
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="flex items-center cursor-pointer group"
           >
-            <Image
-              src="/logo.png"
-              alt="Ganga Dental Clinic"
-              width={180}
-              height={44}
-              className="h-11 w-auto object-contain dark:brightness-110"
-              priority
-            />
+            <ClinicName />
           </div>
 
           {/* Desktop Navigation */}
