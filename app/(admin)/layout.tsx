@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { LayoutDashboard, Stethoscope } from "lucide-react";
+import { LayoutDashboard, Stethoscope, CalendarDays } from "lucide-react";
 import ClinicName from "@/components/ClinicName";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/appointments", label: "Appointments", icon: CalendarDays },
   { href: "/admin/treatments", label: "Treatments", icon: Stethoscope },
 ];
 

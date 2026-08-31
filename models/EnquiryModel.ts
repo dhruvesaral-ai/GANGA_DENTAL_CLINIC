@@ -25,7 +25,12 @@ const enquirySchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Treatment",
         required: true,
-    }
+    },
+    status: {
+        type: String,
+        enum: ["pending", "confirmed", "cancelled"],
+        default: "pending",
+    },
 }, { timestamps: true });
 
 export const EnquiryModel =
