@@ -8,10 +8,12 @@ import Reviews from "@/components/Reviews";
 import FAQ from "@/components/FAQ";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import PageVisitTracker from "@/components/PageVisitTracker";
 
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-slate-950 font-sans">
+      <PageVisitTracker />
       {/* Sticky Navigation Navbar */}
       <Header />
       

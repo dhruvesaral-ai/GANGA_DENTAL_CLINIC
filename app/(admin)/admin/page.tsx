@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Stethoscope, CalendarDays, ArrowRight } from "lucide-react";
+import DashboardStats from "@/components/admin/DashboardStats";
 
 export default function AdminDashboardPage() {
   return (
@@ -7,8 +8,11 @@ export default function AdminDashboardPage() {
       <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Dashboard</h1>
       <p className="mt-2 text-slate-500">Manage your clinic website content.</p>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2">
-        <Link
+      <div className="mt-8">
+        <DashboardStats />
+      </div>
+
+      <div className="mt-8 grid gap-4 sm:grid-cols-2">        <Link
           href="/admin/appointments"
           className="group p-6 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-brand-200 transition-all"
         >
