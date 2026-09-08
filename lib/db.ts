@@ -1,4 +1,8 @@
+import dns from "dns";
 import mongoose from "mongoose";
+
+// Node on Windows often fails SRV lookups via the local router DNS (querySrv ECONNREFUSED).
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
 declare global {
   // eslint-disable-next-line no-var

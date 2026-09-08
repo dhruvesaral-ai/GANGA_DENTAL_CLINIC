@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { LayoutDashboard, Stethoscope, CalendarDays } from "lucide-react";
+import { LayoutDashboard, Stethoscope, CalendarDays, Globe } from "lucide-react";
 import ClinicName from "@/components/ClinicName";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/appointments", label: "Appointments", icon: CalendarDays },
   { href: "/admin/treatments", label: "Treatments", icon: Stethoscope },
+  { href: "/admin/seo", label: "Manage SEO", icon: Globe },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

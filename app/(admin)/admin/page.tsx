@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Stethoscope, CalendarDays, ArrowRight } from "lucide-react";
+import { Stethoscope, CalendarDays, ArrowRight, Globe } from "lucide-react";
 import DashboardStats from "@/components/admin/DashboardStats";
 
 export default function AdminDashboardPage() {
@@ -12,7 +12,8 @@ export default function AdminDashboardPage() {
         <DashboardStats />
       </div>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2">        <Link
+      <div className="mt-8 grid gap-4 sm:grid-cols-2">
+        <Link
           href="/admin/appointments"
           className="group p-6 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-brand-200 transition-all"
         >
@@ -41,6 +42,22 @@ export default function AdminDashboardPage() {
           <h2 className="mt-4 text-lg font-bold text-slate-900">Treatments</h2>
           <p className="mt-1 text-sm text-slate-500">
             Add, edit, and manage treatments shown on the booking form.
+          </p>
+        </Link>
+
+        <Link
+          href="/admin/seo"
+          className="group p-6 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-brand-200 transition-all"
+        >
+          <div className="flex items-start justify-between">
+            <div className="p-3 bg-brand-50 rounded-xl text-brand-600">
+              <Globe className="w-6 h-6" />
+            </div>
+            <ArrowRight className="w-5 h-5 text-slate-300 group-hover:text-brand-500 transition-colors" />
+          </div>
+          <h2 className="mt-4 text-lg font-bold text-slate-900">Manage SEO</h2>
+          <p className="mt-1 text-sm text-slate-500">
+            Edit the meta title and description for search engines.
           </p>
         </Link>
       </div>
