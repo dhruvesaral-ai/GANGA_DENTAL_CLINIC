@@ -4,60 +4,99 @@ import { SettingModel } from "@/models/SettingModel";
 export const SETTING_KEYS = {
   META_TITLE: "meta_title",
   META_DESCRIPTION: "meta_description",
+  META_KEYWORDS: "meta_keywords",
 } as const;
 
-export const DEFAULT_SETTINGS: Record<string, string> = {
+export const RESERVED_SEO_KEYS = Object.values(SETTING_KEYS);
+
+export const DEFAULT_SETTINGS: Record<string, unknown> = {
   [SETTING_KEYS.META_TITLE]:
     "Ganga Dental Clinic & Lab | Best Dentist in Kankarbagh, Patna",
   [SETTING_KEYS.META_DESCRIPTION]:
     "Ganga Dental Clinic in Kankarbagh, Patna offers expert dental services, root canal treatments, implants, braces, and pediatric care. Book an appointment today at +91 9525989736.",
+  [SETTING_KEYS.META_KEYWORDS]: [],
 };
 
-export async function getSetting(key: string): Promise<string> {
+function asString(value: unknown, fallback: string): string {
+  if (typeof value === "string") return value;
+  if (value == null) return fallback;
+  return String(value);
+}
+
+function asStringArray(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter((item): item is string => typeof item === "string" && item.trim() !== "");
+}
+
+export async function getSetting(key: string): Promise<unknown> {
   await connectDB();
 
   const setting = await SettingModel.findOne({ key }).select("value").lean();
-  return setting?.value ?? DEFAULT_SETTINGS[key] ?? "";
+  return setting?.value ?? DEFAULT_SETTINGS[key] ?? null;
 }
 
-export async function getSettings(keys: string[]): Promise<Record<string, string>> {
+export async function getSettings(keys: string[]): Promise<Record<string, unknown>> {
   await connectDB();
 
   const settings = await SettingModel.find({ key: { $in: keys } })
     .select("key value")
     .lean();
 
-  const result: Record<string, string> = {};
+  const result: Record<string, unknown> = {};
   for (const key of keys) {
     const found = settings.find((s) => s.key === key);
-    result[key] = found?.value ?? DEFAULT_SETTINGS[key] ?? "";
+    result[key] = found?.value ?? DEFAULT_SETTINGS[key] ?? null;
   }
 
   return result;
 }
 
-export async function setSettings(data: Record<string, string>) {
+export async function listSettings(excludeKeys: string[] = RESERVED_SEO_KEYS) {
   await connectDB();
 
-  const updates = Object.entries(data).map(([key, value]) =>
-    SettingModel.findOneAndUpdate(
-      { key },
-      { value },
-      { upsert: true, returnDocument: "after", setDefaultsOnInsert: true }
-    )
-  );
+  const settings = await SettingModel.find({ key: { $nin: excludeKeys } })
+    .select("key value createdAt updatedAt")
+    .sort({ key: 1 })
+    .lean();
 
+  return settings;
+}
+
+export async function setSetting(key: string, value: unknown) {
+  await connectDB();
+
+  return SettingModel.findOneAndUpdate(
+    { key },
+    { value },
+    { upsert: true, returnDocument: "after", setDefaultsOnInsert: true }
+  ).lean();
+}
+
+export async function setSettings(data: Record<string, unknown>) {
+  await connectDB();
+
+  const updates = Object.entries(data).map(([key, value]) => setSetting(key, value));
   await Promise.all(updates);
+}
+
+export async function deleteSetting(key: string) {
+  await connectDB();
+  return SettingModel.findOneAndDelete({ key }).lean();
 }
 
 export async function getSeoSettings() {
   const settings = await getSettings([
     SETTING_KEYS.META_TITLE,
     SETTING_KEYS.META_DESCRIPTION,
+    SETTING_KEYS.META_KEYWORDS,
   ]);
 
   return {
-    metaTitle: settings[SETTING_KEYS.META_TITLE],
-    metaDescription: settings[SETTING_KEYS.META_DESCRIPTION],
+    metaTitle: asString(settings[SETTING_KEYS.META_TITLE], DEFAULT_SETTINGS[SETTING_KEYS.META_TITLE] as string),
+    metaDescription: asString(
+      settings[SETTING_KEYS.META_DESCRIPTION],
+      DEFAULT_SETTINGS[SETTING_KEYS.META_DESCRIPTION] as string
+    ),
+    metaKeywords: asStringArray(settings[SETTING_KEYS.META_KEYWORDS]),
   };
 }

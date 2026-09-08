@@ -1,47 +1,69 @@
 import { jsonError, jsonSuccess } from "@/lib/api";
-import { getSeoSettings, setSettings, SETTING_KEYS } from "@/lib/settings";
+import { listSettings, RESERVED_SEO_KEYS } from "@/lib/settings";
+import { connectDB } from "@/lib/db";
+import { SettingModel } from "@/models/SettingModel";
+
+const KEY_PATTERN = /^[a-z][a-z0-9_]*$/;
+
+function validateKey(key: string) {
+  if (!key?.trim()) {
+    return "Key is required";
+  }
+
+  const normalized = key.trim();
+
+  if (!KEY_PATTERN.test(normalized)) {
+    return "Key must start with a letter and contain only lowercase letters, numbers, and underscores";
+  }
+
+  if (RESERVED_SEO_KEYS.includes(normalized)) {
+    return "This key is reserved for SEO settings";
+  }
+
+  return null;
+}
 
 export async function GET() {
   try {
-    const seo = await getSeoSettings();
-    return jsonSuccess(seo);
+    const settings = await listSettings();
+    return jsonSuccess(settings);
   } catch (error) {
     console.error("GET /api/settings:", error);
     return jsonError("Failed to fetch settings", 500);
   }
 }
 
-export async function PUT(request: Request) {
+export async function POST(request: Request) {
   try {
-    const { metaTitle, metaDescription } = await request.json();
+    const { key, value } = await request.json();
 
-    const title = metaTitle?.trim();
-    const description = metaDescription?.trim();
-
-    if (!title) {
-      return jsonError("Meta title is required", 400);
+    const keyError = validateKey(key);
+    if (keyError) {
+      return jsonError(keyError, 400);
     }
 
-    if (!description) {
-      return jsonError("Meta description is required", 400);
+    if (value === undefined) {
+      return jsonError("Value is required", 400);
     }
 
-    if (title.length > 70) {
-      return jsonError("Meta title must be 70 characters or fewer", 400);
+    const normalizedKey = key.trim();
+
+    await connectDB();
+
+    const existing = await SettingModel.findOne({ key: normalizedKey }).lean();
+    if (existing) {
+      return jsonError("A setting with this key already exists", 409);
     }
 
-    if (description.length > 160) {
-      return jsonError("Meta description must be 160 characters or fewer", 400);
+    const setting = await SettingModel.create({ key: normalizedKey, value });
+
+    return jsonSuccess(setting, 201);
+  } catch (error: unknown) {
+    if (error && typeof error === "object" && "code" in error && error.code === 11000) {
+      return jsonError("A setting with this key already exists", 409);
     }
 
-    await setSettings({
-      [SETTING_KEYS.META_TITLE]: title,
-      [SETTING_KEYS.META_DESCRIPTION]: description,
-    });
-
-    return jsonSuccess({ metaTitle: title, metaDescription: description });
-  } catch (error) {
-    console.error("PUT /api/settings:", error);
-    return jsonError("Failed to update settings", 500);
+    console.error("POST /api/settings:", error);
+    return jsonError("Failed to create setting", 500);
   }
 }

@@ -13,6 +13,7 @@ import {
   ExternalLink,
   CheckCircle2,
   XCircle,
+  Settings,
 } from "lucide-react";
 import ApiMethod from "@/services/api-method";
 
@@ -97,11 +98,18 @@ const quickLinks = [
     color: "bg-brand-50 text-brand-600",
   },
   {
-    href: "/admin/settings",
-    label: "SEO & Settings",
-    description: "Meta title and description",
+    href: "/admin/seo",
+    label: "Manage SEO",
+    description: "Meta title, description & keywords",
     icon: Globe,
     color: "bg-violet-50 text-violet-600",
+  },
+  {
+    href: "/admin/settings",
+    label: "Settings",
+    description: "Custom key-value configuration",
+    icon: Settings,
+    color: "bg-slate-100 text-slate-600",
   },
   {
     href: "/",

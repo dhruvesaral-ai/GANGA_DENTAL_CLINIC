@@ -21,6 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: seo.metaTitle,
     description: seo.metaDescription,
+    keywords: seo.metaKeywords.length > 0 ? seo.metaKeywords : undefined,
   };
 }
 
