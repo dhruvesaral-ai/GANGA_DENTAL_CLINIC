@@ -252,7 +252,7 @@ export default function AdminSeoPage() {
             ))}
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <input
               value={keywordInput}
               onChange={(e) => setKeywordInput(e.target.value)}
@@ -262,13 +262,13 @@ export default function AdminSeoPage() {
                   addKeyword();
                 }
               }}
-              className="flex-1 p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-500"
+              className="w-full sm:flex-1 min-w-0 p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-500"
               placeholder="Add a keyword"
             />
             <button
               type="button"
               onClick={addKeyword}
-              className="inline-flex items-center gap-2 px-4 py-3 rounded-xl border border-brand-200 text-brand-700 font-semibold hover:bg-brand-50 cursor-pointer"
+              className="w-full sm:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-brand-200 text-brand-700 font-semibold hover:bg-brand-50 cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               Add Keyword
