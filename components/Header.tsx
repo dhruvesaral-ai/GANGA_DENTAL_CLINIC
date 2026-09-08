@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Menu, X, Phone, Calendar } from "lucide-react";
+import Link from "next/link";
+import { Menu, X, Phone, Calendar, LayoutDashboard } from "lucide-react";
 import ClinicName from "@/components/ClinicName";
 
 export default function Header() {
@@ -77,6 +78,13 @@ export default function Header() {
               <Phone className="w-4 h-4" />
               <span>+91 952598 9736</span>
             </a>
+            <Link
+              href="/admin"
+              className="inline-flex items-center space-x-2 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-brand-300 hover:text-brand-700 dark:hover:text-brand-400 px-4 py-2.5 rounded-full text-sm font-semibold transition-all duration-200"
+            >
+              <LayoutDashboard className="w-4 h-4" />
+              <span>Admin</span>
+            </Link>
             <button
               onClick={() => scrollToSection("contact")}
               className="inline-flex items-center space-x-2 bg-brand-600 hover:bg-brand-700 text-white px-5 py-2.5 rounded-full text-sm font-semibold shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
@@ -118,6 +126,14 @@ export default function Header() {
               </button>
             ))}
             <hr className="border-slate-200 dark:border-slate-800 my-2" />
+            <Link
+              href="/admin"
+              onClick={() => setIsOpen(false)}
+              className="w-full flex items-center justify-center space-x-2 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 py-3 rounded-full text-base font-semibold hover:border-brand-300 hover:text-brand-700 dark:hover:text-brand-400 transition-all duration-200"
+            >
+              <LayoutDashboard className="w-5 h-5" />
+              <span>Admin Panel</span>
+            </Link>
             <button
               onClick={() => scrollToSection("contact")}
               className="w-full flex items-center justify-center space-x-2 bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-full text-base font-semibold shadow-md hover:shadow-lg transition-all duration-200"
