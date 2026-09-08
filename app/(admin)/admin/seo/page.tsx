@@ -85,8 +85,25 @@ export default function AdminSeoPage() {
     }));
   };
 
+  const titleLength = form.metaTitle.trim().length;
+  const descriptionLength = form.metaDescription.trim().length;
+  const titleTooLong = titleLength > 70;
+  const descriptionTooLong = descriptionLength > 160;
+  const canSave = !titleTooLong && !descriptionTooLong && titleLength > 0 && descriptionLength > 0;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (titleTooLong) {
+      setError("Meta title must be 70 characters or fewer.");
+      return;
+    }
+
+    if (descriptionTooLong) {
+      setError(`Meta description is ${descriptionLength} characters. Shorten to 160 or fewer.`);
+      return;
+    }
+
     setSaving(true);
     setError("");
     setSuccess("");
@@ -179,7 +196,11 @@ export default function AdminSeoPage() {
             <label className="text-sm font-semibold text-slate-700">
               SEO Meta Description <span className="text-red-500">*</span>
             </label>
-            <span className="text-xs font-medium text-slate-500">
+            <span
+              className={`text-xs font-medium ${
+                descriptionTooLong ? "text-red-600" : "text-slate-500"
+              }`}
+            >
               {form.metaDescription.length} / 160 max recommended chars
             </span>
           </div>
@@ -200,6 +221,11 @@ export default function AdminSeoPage() {
               style={{ width: `${descriptionProgress}%` }}
             />
           </div>
+          {descriptionTooLong && (
+            <p className="mt-2 text-xs font-semibold text-red-500">
+              Description is too long. Remove {form.metaDescription.length - 160} characters to save.
+            </p>
+          )}
         </section>
 
         <section className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
@@ -297,7 +323,7 @@ export default function AdminSeoPage() {
 
         <button
           type="submit"
-          disabled={saving}
+          disabled={saving || !canSave}
           className="inline-flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white px-6 py-3 rounded-full text-sm font-semibold shadow-sm transition-colors disabled:opacity-50 cursor-pointer"
         >
           <Save className="w-4 h-4" />

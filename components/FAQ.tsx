@@ -2,20 +2,22 @@
 
 import { useState } from "react";
 import { ChevronDown, HelpCircle } from "lucide-react";
+import { useSiteSettings } from "@/contexts/SiteSettingsContext";
+import { formatPhoneDisplay } from "@/lib/site";
 
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const { companyName, phoneNumber } = useSiteSettings();
+  const phoneDisplay = formatPhoneDisplay(phoneNumber);
 
   const faqs = [
     {
       question: "What are the clinic's operating hours?",
-      answer:
-        "Ganga Dental Clinic is open from Monday to Saturday, 10:00 AM to 8:30 PM, and on Sundays from 10:00 AM to 2:00 PM. We recommend calling in advance for Sunday consultations.",
+      answer: `${companyName} is open from Monday to Saturday, 10:00 AM to 8:30 PM, and on Sundays from 10:00 AM to 2:00 PM. We recommend calling in advance for Sunday consultations.`,
     },
     {
       question: "How can I book or reschedule an appointment?",
-      answer:
-        "You can easily book or reschedule an appointment online by filling out the form in our Contact section, or by calling/WhatsApping our front desk at +91 9525989736.",
+      answer: `You can easily book or reschedule an appointment online by filling out the form in our Contact section, or by calling/WhatsApping our front desk at ${phoneDisplay}.`,
     },
     {
       question: "Do you offer emergency dental services?",

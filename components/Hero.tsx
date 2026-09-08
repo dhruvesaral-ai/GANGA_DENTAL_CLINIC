@@ -2,8 +2,11 @@
 
 import Image from "next/image";
 import { Phone, Calendar, Star, Award, ShieldCheck, HeartPulse } from "lucide-react";
+import { useSiteSettings } from "@/contexts/SiteSettingsContext";
+import { toTelLink } from "@/lib/site";
 
 export default function Hero() {
+  const { companyName, phoneNumber } = useSiteSettings();
   const scrollToContact = () => {
     const element = document.getElementById("contact");
     if (element) {
@@ -43,9 +46,9 @@ export default function Hero() {
 
             {/* Description */}
             <p className="text-base sm:text-lg text-slate-600 dark:text-slate-350 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-              Experience world-class dental care with our team of specialists at **Ganga Dental Clinic**. 
-              We combine advanced dentistry technology with a gentle, patient-first approach to ensure 
-              maximum comfort and a perfect smile.
+              Experience world-class dental care with our team of specialists at{" "}
+              <strong>{companyName}</strong>. We combine advanced dentistry technology with a gentle,
+              patient-first approach to ensure maximum comfort and a perfect smile.
             </p>
 
             {/* CTA Buttons */}
@@ -58,7 +61,7 @@ export default function Hero() {
                 <span>Book Appointment</span>
               </button>
               <a
-                href="tel:+919525989736"
+                href={toTelLink(phoneNumber)}
                 className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 px-8 py-3.5 rounded-full text-base font-bold border border-slate-200/50 dark:border-slate-700/50 shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
               >
                 <Phone className="w-5 h-5 text-brand-600 dark:text-brand-400" />
@@ -90,7 +93,7 @@ export default function Hero() {
             <div className="relative w-full max-w-[450px] aspect-[4/5] rounded-[2.5rem] overflow-hidden border-4 border-white dark:border-slate-850 shadow-2xl transition-all duration-500 hover:scale-[1.02]">
               <Image
                 src="/professional_dentist_in_a_modern_clean_dental_clinic_smiling_at_the_camera_high.png"
-                alt="Expert Dentist Ganga Dental Clinic"
+                alt={`Expert Dentist ${companyName}`}
                 fill
                 sizes="(max-w-7xl) 100vw, 50vw"
                 className="object-cover"

@@ -4,8 +4,13 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X, Phone, Calendar, LayoutDashboard } from "lucide-react";
 import ClinicName from "@/components/ClinicName";
+import { useSiteSettings } from "@/contexts/SiteSettingsContext";
+import { formatPhoneDisplay, toTelLink } from "@/lib/site";
 
 export default function Header() {
+  const { phoneNumber } = useSiteSettings();
+  const phoneDisplay = formatPhoneDisplay(phoneNumber);
+  const telLink = toTelLink(phoneNumber);
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -72,11 +77,11 @@ export default function Header() {
           {/* Action Buttons */}
           <div className="hidden md:flex items-center space-x-4">
             <a
-              href="tel:+919525989736"
+              href={telLink}
               className="flex items-center space-x-1.5 text-sm font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors duration-200"
             >
               <Phone className="w-4 h-4" />
-              <span>+91 952598 9736</span>
+              <span>{phoneDisplay}</span>
             </a>
             <Link
               href="/admin"
@@ -97,7 +102,7 @@ export default function Header() {
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center space-x-3">
             <a
-              href="tel:+919525989736"
+              href={telLink}
               className="p-2 rounded-full bg-brand-50 dark:bg-brand-950/30 text-brand-600 dark:text-brand-400 hover:scale-105 transition-transform duration-200"
             >
               <Phone className="w-4 h-4" />
