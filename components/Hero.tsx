@@ -32,12 +32,6 @@ export default function Hero() {
           {/* Left Text Column */}
           <div className="lg:col-span-7 space-y-6 sm:space-y-8 text-center lg:text-left">
             
-            {/* Rating Badge */}
-            <div className="inline-flex items-center space-x-2 bg-brand-100/60 dark:bg-brand-950/40 px-4 py-1.5 rounded-full text-brand-700 dark:text-brand-300 font-semibold text-xs sm:text-sm animate-pulse border border-brand-200/50 dark:border-brand-900/50">
-              <Star className="w-4 h-4 fill-brand-500 text-brand-500" />
-              <span>4.9/5 Rating from 10k+ Patients</span>
-            </div>
-
             {/* Heading */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900 dark:text-white leading-[1.1]">
               Expert Care for a{" "}
