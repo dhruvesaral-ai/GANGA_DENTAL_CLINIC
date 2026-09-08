@@ -1,5 +1,5 @@
 import { jsonError, jsonSuccess } from "@/lib/api";
-import { deleteSetting, RESERVED_SEO_KEYS, setSetting } from "@/lib/settings";
+import { deleteSetting, isReservedSeoKey, setSetting } from "@/lib/settings";
 
 type RouteContext = { params: Promise<{ key: string }> };
 
@@ -8,7 +8,7 @@ export async function PUT(request: Request, context: RouteContext) {
     const { key } = await context.params;
     const decodedKey = decodeURIComponent(key);
 
-    if (RESERVED_SEO_KEYS.includes(decodedKey)) {
+    if (isReservedSeoKey(decodedKey)) {
       return jsonError("This key is reserved for SEO settings", 400);
     }
 
@@ -36,7 +36,7 @@ export async function DELETE(_request: Request, context: RouteContext) {
     const { key } = await context.params;
     const decodedKey = decodeURIComponent(key);
 
-    if (RESERVED_SEO_KEYS.includes(decodedKey)) {
+    if (isReservedSeoKey(decodedKey)) {
       return jsonError("This key is reserved for SEO settings", 400);
     }
 

@@ -7,7 +7,11 @@ export const SETTING_KEYS = {
   META_KEYWORDS: "meta_keywords",
 } as const;
 
-export const RESERVED_SEO_KEYS = Object.values(SETTING_KEYS);
+export const RESERVED_SEO_KEYS: string[] = Object.values(SETTING_KEYS);
+
+export function isReservedSeoKey(key: string): boolean {
+  return RESERVED_SEO_KEYS.includes(key);
+}
 
 export const DEFAULT_SETTINGS: Record<string, unknown> = {
   [SETTING_KEYS.META_TITLE]:

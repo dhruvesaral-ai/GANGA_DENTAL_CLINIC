@@ -1,5 +1,5 @@
 import { jsonError, jsonSuccess } from "@/lib/api";
-import { listSettings, RESERVED_SEO_KEYS } from "@/lib/settings";
+import { listSettings, isReservedSeoKey } from "@/lib/settings";
 import { connectDB } from "@/lib/db";
 import { SettingModel } from "@/models/SettingModel";
 
@@ -16,7 +16,7 @@ function validateKey(key: string) {
     return "Key must start with a letter and contain only lowercase letters, numbers, and underscores";
   }
 
-  if (RESERVED_SEO_KEYS.includes(normalized)) {
+  if (isReservedSeoKey(normalized)) {
     return "This key is reserved for SEO settings";
   }
 
