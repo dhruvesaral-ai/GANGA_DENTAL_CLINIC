@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins, Playfair_Display } from "next/font/google";
-import { getSeoSettings } from "@/lib/seo";
+import { getSeoSettings } from "@/lib/settings";
 import "./globals.css";
 
 const poppins = Poppins({

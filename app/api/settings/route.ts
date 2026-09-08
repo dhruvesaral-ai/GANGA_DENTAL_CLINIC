@@ -1,22 +1,18 @@
-import { connectDB } from "@/lib/db";
 import { jsonError, jsonSuccess } from "@/lib/api";
-import { getSeoSettings, SEO_KEY } from "@/lib/seo";
-import { SeoSettingsModel } from "@/models/SeoSettingsModel";
+import { getSeoSettings, setSettings, SETTING_KEYS } from "@/lib/settings";
 
 export async function GET() {
   try {
     const seo = await getSeoSettings();
     return jsonSuccess(seo);
   } catch (error) {
-    console.error("GET /api/seo:", error);
-    return jsonError("Failed to fetch SEO settings", 500);
+    console.error("GET /api/settings:", error);
+    return jsonError("Failed to fetch settings", 500);
   }
 }
 
 export async function PUT(request: Request) {
   try {
-    await connectDB();
-
     const { metaTitle, metaDescription } = await request.json();
 
     const title = metaTitle?.trim();
@@ -38,20 +34,14 @@ export async function PUT(request: Request) {
       return jsonError("Meta description must be 160 characters or fewer", 400);
     }
 
-    const seo = await SeoSettingsModel.findOneAndUpdate(
-      { key: SEO_KEY },
-      { metaTitle: title, metaDescription: description },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
-    )
-      .select("metaTitle metaDescription")
-      .lean();
-
-    return jsonSuccess({
-      metaTitle: seo.metaTitle,
-      metaDescription: seo.metaDescription,
+    await setSettings({
+      [SETTING_KEYS.META_TITLE]: title,
+      [SETTING_KEYS.META_DESCRIPTION]: description,
     });
+
+    return jsonSuccess({ metaTitle: title, metaDescription: description });
   } catch (error) {
-    console.error("PUT /api/seo:", error);
-    return jsonError("Failed to update SEO settings", 500);
+    console.error("PUT /api/settings:", error);
+    return jsonError("Failed to update settings", 500);
   }
 }

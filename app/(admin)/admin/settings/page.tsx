@@ -9,7 +9,7 @@ type SeoForm = {
   metaDescription: string;
 };
 
-export default function AdminSeoPage() {
+export default function AdminSettingsPage() {
   const [form, setForm] = useState<SeoForm>({ metaTitle: "", metaDescription: "" });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -17,10 +17,10 @@ export default function AdminSeoPage() {
   const [success, setSuccess] = useState("");
 
   useEffect(() => {
-    const fetchSeo = async () => {
+    const fetchSettings = async () => {
       setLoading(true);
       try {
-        const result = await ApiMethod.get("/api/seo");
+        const result = await ApiMethod.get("/api/settings");
         if (result.success) {
           setForm({
             metaTitle: result.data.metaTitle,
@@ -32,7 +32,7 @@ export default function AdminSeoPage() {
       }
     };
 
-    fetchSeo();
+    fetchSettings();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -42,7 +42,7 @@ export default function AdminSeoPage() {
     setSuccess("");
 
     try {
-      const result = await ApiMethod.put("/api/seo", form);
+      const result = await ApiMethod.put("/api/settings", form);
 
       if (!result.success) {
         setError(result.message || "Something went wrong");
@@ -53,7 +53,7 @@ export default function AdminSeoPage() {
         metaTitle: result.data.metaTitle,
         metaDescription: result.data.metaDescription,
       });
-      setSuccess("SEO settings saved successfully.");
+      setSuccess("Settings saved successfully.");
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
@@ -63,7 +63,9 @@ export default function AdminSeoPage() {
 
   return (
     <div className="max-w-4xl">
-      <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Manage SEO</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">
+        Manage SEO &amp; Settings
+      </h1>
       <p className="mt-1 text-slate-500">
         Update the meta title and description shown in search engines and browser tabs.
       </p>
@@ -116,7 +118,7 @@ export default function AdminSeoPage() {
               disabled={saving}
               className="inline-flex items-center justify-center bg-brand-600 hover:bg-brand-700 text-white px-6 py-3 rounded-full text-sm font-semibold shadow-sm transition-colors disabled:opacity-50 cursor-pointer"
             >
-              {saving ? "Saving..." : "Save SEO Settings"}
+              {saving ? "Saving..." : "Save Settings"}
             </button>
           </form>
         )}

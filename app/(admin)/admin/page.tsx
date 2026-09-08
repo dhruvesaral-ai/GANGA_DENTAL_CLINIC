@@ -46,7 +46,7 @@ export default function AdminDashboardPage() {
         </Link>
 
         <Link
-          href="/admin/seo"
+          href="/admin/settings"
           className="group p-6 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-brand-200 transition-all"
         >
           <div className="flex items-start justify-between">
@@ -55,7 +55,7 @@ export default function AdminDashboardPage() {
             </div>
             <ArrowRight className="w-5 h-5 text-slate-300 group-hover:text-brand-500 transition-colors" />
           </div>
-          <h2 className="mt-4 text-lg font-bold text-slate-900">Manage SEO</h2>
+          <h2 className="mt-4 text-lg font-bold text-slate-900">Manage SEO &amp; Settings</h2>
           <p className="mt-1 text-sm text-slate-500">
             Edit the meta title and description for search engines.
           </p>
