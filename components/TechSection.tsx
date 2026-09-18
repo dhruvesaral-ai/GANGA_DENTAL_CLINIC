@@ -33,8 +33,8 @@ export default function TechSection() {
             
             <div className="relative w-full max-w-[500px] aspect-[4/3] rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white dark:border-slate-850 hover:scale-[1.01] transition-transform duration-500">
               <Image
-                src="/modern_dental_clinic_interior_high_tech_equipment_comfortable_patient_chair.png"
-                alt="State of the art technology at Ganga Dental Clinic"
+                src="/ganga_Dental_Care_reception_Desk.jpeg"
+                alt="Ganga Dental Care reception desk"
                 fill
                 sizes="(max-w-7xl) 100vw, 50vw"
                 className="object-cover"

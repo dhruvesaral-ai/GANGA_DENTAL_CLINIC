@@ -92,7 +92,7 @@ export default function Hero() {
             {/* Main Image Wrapper */}
             <div className="relative w-full max-w-[450px] aspect-[4/5] rounded-[2.5rem] overflow-hidden border-4 border-white dark:border-slate-850 shadow-2xl transition-all duration-500 hover:scale-[1.02]">
               <Image
-                src="/professional_dentist_in_a_modern_clean_dental_clinic_smiling_at_the_camera_high.png"
+                src="/ganga_Dental_Care_main_Desk_with_doctor_sitting.jpeg"
                 alt={`Expert Dentist ${companyName}`}
                 fill
                 sizes="(max-w-7xl) 100vw, 50vw"

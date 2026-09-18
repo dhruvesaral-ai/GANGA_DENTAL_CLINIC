@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins, Playfair_Display } from "next/font/google";
-import { getSeoSettings } from "@/lib/settings";
+import { getSeoSettings, DEFAULT_SETTINGS, SETTING_KEYS } from "@/lib/settings";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -16,13 +16,22 @@ const playfair = Playfair_Display({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  const seo = await getSeoSettings();
+  try {
+    const seo = await getSeoSettings();
 
-  return {
-    title: seo.metaTitle,
-    description: seo.metaDescription,
-    keywords: seo.metaKeywords.length > 0 ? seo.metaKeywords : undefined,
-  };
+    return {
+      title: seo.metaTitle,
+      description: seo.metaDescription,
+      keywords: seo.metaKeywords.length > 0 ? seo.metaKeywords : undefined,
+    };
+  } catch (error) {
+    console.error("Failed to load SEO settings for metadata:", error);
+
+    return {
+      title: DEFAULT_SETTINGS[SETTING_KEYS.META_TITLE] as string,
+      description: DEFAULT_SETTINGS[SETTING_KEYS.META_DESCRIPTION] as string,
+    };
+  }
 }
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

@@ -12,9 +12,16 @@ import PageVisitTracker from "@/components/PageVisitTracker";
 import FloatingContactButtons from "@/components/FloatingContactButtons";
 import { SiteSettingsProvider } from "@/contexts/SiteSettingsContext";
 import { getSiteSettings } from "@/lib/site-settings-server";
+import { DEFAULT_SITE_SETTINGS } from "@/lib/site";
 
 export default async function Home() {
-  const siteSettings = await getSiteSettings();
+  let siteSettings = DEFAULT_SITE_SETTINGS;
+
+  try {
+    siteSettings = await getSiteSettings();
+  } catch (error) {
+    console.error("Failed to load site settings, using defaults:", error);
+  }
 
   return (
     <SiteSettingsProvider settings={siteSettings}>
