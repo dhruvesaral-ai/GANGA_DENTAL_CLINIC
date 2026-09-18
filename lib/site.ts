@@ -14,8 +14,8 @@ export type SiteSettings = {
 
 export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   companyName: "Ganga Dental Clinic",
-  phoneNumber: "+919525989736",
-  whatsappNumber: "+919525989736",
+  phoneNumber: "+918178116441",
+  whatsappNumber: "+918178116441",
   address:
     "Road No:- 2, Dwarika Puri, House no:- 281, Hanuman Nagar, Kankarbagh, Patna, Bihar 800020",
 };

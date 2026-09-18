@@ -15,7 +15,7 @@ export function isReservedSeoKey(key: string): boolean {
 
 export const DEFAULT_SETTINGS: Record<string, unknown> = {
   [SETTING_KEYS.META_TITLE]:
-    "Ganga Dental Clinic & Lab | Best Dentist in Kankarbagh, Patna",
+    "Ganga Dental Clinic | Best Dentist in Kankarbagh, Patna",
   [SETTING_KEYS.META_DESCRIPTION]:
     "Ganga Dental Clinic in Kankarbagh, Patna — root canal, implants, braces & pediatric care. Book today: +91 9525989736.",
   [SETTING_KEYS.META_KEYWORDS]: [],
