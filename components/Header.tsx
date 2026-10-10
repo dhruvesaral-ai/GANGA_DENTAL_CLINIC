@@ -1,12 +1,32 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Menu, X, Phone, Calendar } from "lucide-react";
+import Link from "next/link";
+import { Menu, X, Phone, Calendar, LayoutDashboard, LogIn } from "lucide-react";
 import ClinicName from "@/components/ClinicName";
+import ApiMethod from "@/services/api-method";
+
+type AuthUser = {
+  id: string;
+  name: string;
+  email: string;
+  role: "user" | "admin";
+};
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [authUser, setAuthUser] = useState<AuthUser | null>(null);
+
+  useEffect(() => {
+    ApiMethod.get("/api/auth/me")
+      .then((res) => {
+        if (res.success && res.data?.user) {
+          setAuthUser(res.data.user);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -70,6 +90,24 @@ export default function Header() {
 
           {/* Action Buttons */}
           <div className="hidden md:flex items-center space-x-4">
+            {authUser?.role === "admin" && (
+              <Link
+                href="/admin"
+                className="flex items-center space-x-1.5 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors duration-200"
+              >
+                <LayoutDashboard className="w-4 h-4" />
+                <span>Admin</span>
+              </Link>
+            )}
+            {!authUser && (
+              <Link
+                href="/login"
+                className="flex items-center space-x-1.5 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors duration-200"
+              >
+                <LogIn className="w-4 h-4" />
+                <span>Login</span>
+              </Link>
+            )}
             <a
               href="tel:+919525989736"
               className="flex items-center space-x-1.5 text-sm font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors duration-200"
@@ -118,6 +156,26 @@ export default function Header() {
               </button>
             ))}
             <hr className="border-slate-200 dark:border-slate-800 my-2" />
+            {authUser?.role === "admin" && (
+              <Link
+                href="/admin"
+                onClick={() => setIsOpen(false)}
+                className="flex items-center gap-2 py-2 text-base font-semibold text-slate-700 dark:text-slate-300 hover:text-brand-600"
+              >
+                <LayoutDashboard className="w-5 h-5" />
+                Admin Dashboard
+              </Link>
+            )}
+            {!authUser && (
+              <Link
+                href="/login"
+                onClick={() => setIsOpen(false)}
+                className="flex items-center gap-2 py-2 text-base font-semibold text-slate-700 dark:text-slate-300 hover:text-brand-600"
+              >
+                <LogIn className="w-5 h-5" />
+                Login
+              </Link>
+            )}
             <button
               onClick={() => scrollToSection("contact")}
               className="w-full flex items-center justify-center space-x-2 bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-full text-base font-semibold shadow-md hover:shadow-lg transition-all duration-200"

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { LayoutDashboard, Stethoscope, CalendarDays } from "lucide-react";
 import ClinicName from "@/components/ClinicName";
+import AdminLogoutButton from "@/components/admin/AdminLogoutButton";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -31,7 +32,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             ))}
           </nav>
 
-          <div className="p-4 border-t border-slate-800">
+          <div className="p-4 border-t border-slate-800 space-y-3">
+            <AdminLogoutButton />
             <Link
               href="/"
               className="block text-center text-sm font-semibold text-brand-400 hover:text-brand-300 transition-colors"
