@@ -7,7 +7,7 @@ export async function GET() {
     return jsonSuccess(seo);
   } catch (error) {
     console.error("GET /api/seo:", error);
-    return jsonError("Failed to fetch SEO settings", 500);
+    return jsonError("Failed to fetch SEO settings", 500, error);
   }
 }
 
@@ -50,6 +50,6 @@ export async function PUT(request: Request) {
     return jsonSuccess({ metaTitle: title, metaDescription: description, metaKeywords: keywords });
   } catch (error) {
     console.error("PUT /api/seo:", error);
-    return jsonError("Failed to update SEO settings", 500);
+    return jsonError("Failed to update SEO settings", 500, error);
   }
 }

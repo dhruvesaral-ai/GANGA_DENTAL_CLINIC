@@ -42,7 +42,7 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
     });
   } catch (error) {
     console.error("PUT /api/appointments/[id]:", error);
-    return jsonError("Failed to update appointment", 500);
+    return jsonError("Failed to update appointment", 500, error);
   }
 }
 
@@ -65,6 +65,6 @@ export async function DELETE(_request: NextRequest, { params }: RouteContext) {
     return jsonSuccess({ message: "Appointment deleted successfully" });
   } catch (error) {
     console.error("DELETE /api/appointments/[id]:", error);
-    return jsonError("Failed to delete appointment", 500);
+    return jsonError("Failed to delete appointment", 500, error);
   }
 }

@@ -27,6 +27,6 @@ export async function GET() {
     });
   } catch (error) {
     console.error("GET /api/auth/me:", error);
-    return jsonError("Failed to fetch session", 500);
+    return jsonError("Failed to fetch session", 500, error);
   }
 }

@@ -26,7 +26,11 @@ function LoginForm() {
       const result = await ApiMethod.post("/api/auth/login", { email, password });
 
       if (!result.success) {
-        setError(result.message || "Login failed");
+        const detail =
+          typeof result.error === "string" ? result.error : undefined;
+        setError(
+          detail ? `${result.message || "Login failed"}: ${detail}` : result.message || "Login failed"
+        );
         return;
       }
 

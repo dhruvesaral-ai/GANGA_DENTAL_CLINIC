@@ -19,6 +19,6 @@ export async function GET() {
     return jsonSuccess(normalized);
   } catch (error) {
     console.error("GET /api/appointments:", error);
-    return jsonError("Failed to fetch appointments", 500);
+    return jsonError("Failed to fetch appointments", 500, error);
   }
 }

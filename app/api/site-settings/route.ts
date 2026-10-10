@@ -7,6 +7,6 @@ export async function GET() {
     return jsonSuccess(settings);
   } catch (error) {
     console.error("GET /api/site-settings:", error);
-    return jsonError("Failed to fetch site settings", 500);
+    return jsonError("Failed to fetch site settings", 500, error);
   }
 }

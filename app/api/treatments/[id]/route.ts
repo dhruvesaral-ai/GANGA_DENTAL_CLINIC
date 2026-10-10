@@ -36,8 +36,9 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
     }
 
     return jsonSuccess(treatment);
-  } catch {
-    return jsonError("Failed to update treatment", 500);
+  } catch (error) {
+    console.error("PUT /api/treatments/[id]:", error);
+    return jsonError("Failed to update treatment", 500, error);
   }
 }
 
@@ -62,7 +63,8 @@ export async function DELETE(_request: NextRequest, { params }: RouteContext) {
     }
 
     return jsonSuccess({ message: "Treatment deactivated successfully" });
-  } catch {
-    return jsonError("Failed to delete treatment", 500);
+  } catch (error) {
+    console.error("DELETE /api/treatments/[id]:", error);
+    return jsonError("Failed to delete treatment", 500, error);
   }
 }

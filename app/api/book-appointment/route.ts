@@ -48,7 +48,8 @@ export async function POST(request: NextRequest) {
       },
       201
     );
-  } catch {
-    return jsonError("Failed to book appointment", 500);
+  } catch (error) {
+    console.error("POST /api/book-appointment:", error);
+    return jsonError("Failed to book appointment", 500, error);
   }
 }

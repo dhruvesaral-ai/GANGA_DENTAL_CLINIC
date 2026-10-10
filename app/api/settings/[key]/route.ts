@@ -27,7 +27,7 @@ export async function PUT(request: Request, context: RouteContext) {
     return jsonSuccess(setting);
   } catch (error) {
     console.error("PUT /api/settings/[key]:", error);
-    return jsonError("Failed to update setting", 500);
+    return jsonError("Failed to update setting", 500, error);
   }
 }
 
@@ -49,6 +49,6 @@ export async function DELETE(_request: Request, context: RouteContext) {
     return jsonSuccess({ key: decodedKey });
   } catch (error) {
     console.error("DELETE /api/settings/[key]:", error);
-    return jsonError("Failed to delete setting", 500);
+    return jsonError("Failed to delete setting", 500, error);
   }
 }

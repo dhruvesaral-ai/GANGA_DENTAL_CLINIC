@@ -15,7 +15,7 @@ export async function GET() {
     return jsonSuccess({ count: visit?.count ?? 0 });
   } catch (error) {
     console.error("GET /api/page-visits:", error);
-    return jsonError("Failed to fetch page visits", 500);
+    return jsonError("Failed to fetch page visits", 500, error);
   }
 }
 
@@ -32,6 +32,6 @@ export async function POST() {
     return jsonSuccess({ count: visit.count });
   } catch (error) {
     console.error("POST /api/page-visits:", error);
-    return jsonError("Failed to record page visit", 500);
+    return jsonError("Failed to record page visit", 500, error);
   }
 }

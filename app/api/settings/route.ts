@@ -29,7 +29,7 @@ export async function GET() {
     return jsonSuccess(settings);
   } catch (error) {
     console.error("GET /api/settings:", error);
-    return jsonError("Failed to fetch settings", 500);
+    return jsonError("Failed to fetch settings", 500, error);
   }
 }
 
@@ -64,6 +64,6 @@ export async function POST(request: Request) {
     }
 
     console.error("POST /api/settings:", error);
-    return jsonError("Failed to create setting", 500);
+    return jsonError("Failed to create setting", 500, error);
   }
 }

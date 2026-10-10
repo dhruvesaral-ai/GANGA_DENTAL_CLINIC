@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     return jsonSuccess(treatments);
   } catch (error) {
     console.error("GET /api/treatments:", error);
-    return jsonError("Failed to fetch treatments", 500);
+    return jsonError("Failed to fetch treatments", 500, error);
   }
 }
 
@@ -40,6 +40,6 @@ export async function POST(request: NextRequest) {
     return jsonSuccess(treatment, 201);
   } catch (error) {
     console.error("POST /api/treatments:", error);
-    return jsonError("Failed to create treatment", 500);
+    return jsonError("Failed to create treatment", 500, error);
   }
 }
