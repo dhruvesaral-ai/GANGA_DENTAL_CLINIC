@@ -1,0 +1,13 @@
+---
+description: Use Yarn for all package manager commands in this project
+alwaysApply: true
+---
+
+# Package manager
+
+Use **Yarn** only — not npm or pnpm.
+
+- Install dependencies: `yarn` or `yarn install`
+- Add packages: `yarn add` / `yarn add -D`
+- Scripts: `yarn dev`, `yarn build`, `yarn start`, `yarn lint`
+- Do not run `npm install`, `npx` for project scripts (use `yarn` / `yarn dlx` when needed)
