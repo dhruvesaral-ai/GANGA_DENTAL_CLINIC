@@ -11,7 +11,7 @@ export async function connectDB() {
   const uri = process.env.DB_URI;
 
   if (!uri) {
-    throw new Error("DB_URI is not set in environment variables");
+    throw new Error("DB_URI is not set in environment variable");
   }
 
   if (mongoose.connection.readyState >= 1) {
