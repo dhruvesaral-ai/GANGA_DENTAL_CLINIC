@@ -30,4 +30,4 @@ jobs:
             git pull origin main
             yarn install --frozen-lockfile
             yarn build
-            pm2 restart ganga-dental-care
+            pm2 restart ganga-dental-clinic
