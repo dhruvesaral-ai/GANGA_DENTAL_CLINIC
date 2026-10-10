@@ -21,6 +21,10 @@ jobs:
           port: ${{ secrets.VPS_PORT }}
           script: |
             set -e
+
+            export NVM_DIR="/root/.nvm"
+            export PATH="/root/.nvm/versions/node/v24.21.0/bin:/usr/local/bin:/usr/bin:/bin"
+
             cd /var/www/ganga-dental-clinic
 
             git pull origin main
