@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins, Playfair_Display } from "next/font/google";
+import { getSeoSettings, DEFAULT_SETTINGS, SETTING_KEYS } from "@/lib/settings";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -14,10 +15,24 @@ const playfair = Playfair_Display({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Ganga Dental Clinic & Lab | Best Dentist in Kankarbagh, Patna",
-  description: "Ganga Dental Clinic in Kankarbagh, Patna offers expert dental services, root canal treatments, implants, braces, and pediatric care. Book an appointment today at +91 9525989736.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  try {
+    const seo = await getSeoSettings();
+
+    return {
+      title: seo.metaTitle,
+      description: seo.metaDescription,
+      keywords: seo.metaKeywords.length > 0 ? seo.metaKeywords : undefined,
+    };
+  } catch (error) {
+    console.error("Failed to load SEO settings for metadata:", error);
+
+    return {
+      title: DEFAULT_SETTINGS[SETTING_KEYS.META_TITLE] as string,
+      description: DEFAULT_SETTINGS[SETTING_KEYS.META_DESCRIPTION] as string,
+    };
+  }
+}
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

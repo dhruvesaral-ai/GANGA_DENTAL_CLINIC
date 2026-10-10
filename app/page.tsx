@@ -9,43 +9,40 @@ import FAQ from "@/components/FAQ";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import PageVisitTracker from "@/components/PageVisitTracker";
+import FloatingContactButtons from "@/components/FloatingContactButtons";
+import { SiteSettingsProvider } from "@/contexts/SiteSettingsContext";
+import { getSiteSettings } from "@/lib/site-settings-server";
+import { DEFAULT_SITE_SETTINGS } from "@/lib/site";
 
-export default function Home() {
+export default async function Home() {
+  let siteSettings = DEFAULT_SITE_SETTINGS;
+
+  try {
+    siteSettings = await getSiteSettings();
+  } catch (error) {
+    console.error("Failed to load site settings, using defaults:", error);
+  }
+
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-slate-950 font-sans">
-      <PageVisitTracker />
-      {/* Sticky Navigation Navbar */}
-      <Header />
-      
-      {/* Page Sections */}
-      <main className="flex-1">
-        {/* Banner with Dentist Image overlay */}
-        <Hero />
-        
-        {/* Quick Credentials / Achievements */}
-        <Stats />
-        
-        {/* Services Listings */}
-        <Services />
-        
-        {/* State of the art Technology Details */}
-        <TechSection />
-        
-        {/* Grid Collage Gallery */}
-        <Gallery />
-        
-        {/* Testimonials and Ratings */}
-        <Reviews />
-        
-        {/* Interactive Accordion FAQs */}
-        <FAQ />
-        
-        {/* Detailed Booking & Contact Panel with Map */}
-        <Contact />
-      </main>
+    <SiteSettingsProvider settings={siteSettings}>
+      <div className="min-h-screen flex flex-col bg-white dark:bg-slate-950 font-sans">
+        <PageVisitTracker />
+        <Header />
 
-      {/* Footer Details */}
-      <Footer />
-    </div>
+        <main className="flex-1">
+          <Hero />
+          <Stats />
+          <Services />
+          <TechSection />
+          <Gallery />
+          <Reviews />
+          <FAQ />
+          <Contact />
+        </main>
+
+        <Footer />
+        <FloatingContactButtons />
+      </div>
+    </SiteSettingsProvider>
   );
 }

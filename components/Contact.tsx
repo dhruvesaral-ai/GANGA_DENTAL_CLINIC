@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { Phone, MapPin, Clock, Send, CheckCircle2 } from "lucide-react";
 import ApiMethod from "@/services/api-method";
+import { useSiteSettings } from "@/contexts/SiteSettingsContext";
+import { formatPhoneDisplay, toTelLink } from "@/lib/site";
 
 type Treatment = {
   _id: string;
@@ -10,6 +12,10 @@ type Treatment = {
 };
 
 export default function Contact() {
+  const { companyName, phoneNumber, address } = useSiteSettings();
+  const phoneDisplay = formatPhoneDisplay(phoneNumber);
+  const telLink = toTelLink(phoneNumber);
+  const mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent(address)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
   const [treatments, setTreatments] = useState<Treatment[]>([]);
   const [formData, setFormData] = useState({
     name: "",
@@ -116,14 +122,14 @@ export default function Contact() {
                 <div>
                   <h4 className="font-bold text-slate-850 dark:text-slate-100">Clinic Location</h4>
                   <p className="text-sm text-slate-500 dark:text-slate-450 mt-1 leading-relaxed">
-                    Road No:- 2, Dwarika Puri, House no:- 281, Hanuman Nagar, Kankarbagh, Patna, Bihar 800020
+                    {address}
                   </p>
                 </div>
               </div>
 
               {/* Call */}
               <a
-                href="tel:+919525989736"
+                href={telLink}
                 className="flex items-start space-x-4 p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow cursor-pointer group"
               >
                 <div className="p-3 bg-brand-50 dark:bg-brand-950/40 rounded-xl text-brand-600 dark:text-brand-400 shrink-0 group-hover:scale-105 transition-transform">
@@ -132,7 +138,7 @@ export default function Contact() {
                 <div>
                   <h4 className="font-bold text-slate-850 dark:text-slate-100">Contact Number</h4>
                   <p className="text-sm text-slate-500 dark:text-slate-450 mt-1 font-semibold group-hover:text-brand-600 transition-colors">
-                    +91 952598 9736
+                    {phoneDisplay}
                   </p>
                 </div>
               </a>
@@ -156,8 +162,8 @@ export default function Contact() {
             {/* Map Frame */}
             <div className="w-full h-[240px] rounded-[2rem] overflow-hidden border-2 border-white dark:border-slate-800 shadow-md">
               <iframe
-                title="Ganga Dental Clinic Location Map"
-                src="https://maps.google.com/maps?q=Hanuman%20Nagar%20Kankarbagh%20Patna%20Bihar&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                title={`${companyName} Location Map`}
+                src={mapSrc}
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
@@ -178,7 +184,7 @@ export default function Contact() {
                 </div>
                 <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Appointment Requested!</h3>
                 <p className="text-slate-500 dark:text-slate-400 max-w-md mx-auto">
-                  Thank you for scheduling your visit at Ganga Dental Clinic. Our clinic manager will call you shortly on your phone to confirm your exact appointment slot.
+                  Thank you for scheduling your visit at {companyName}. Our clinic manager will call you shortly on your phone to confirm your exact appointment slot.
                 </p>
                 <button
                   onClick={() => setStatus("idle")}

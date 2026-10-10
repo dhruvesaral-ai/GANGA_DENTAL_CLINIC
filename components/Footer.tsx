@@ -1,8 +1,13 @@
 "use client";
 
 import ClinicName from "@/components/ClinicName";
+import { useSiteSettings } from "@/contexts/SiteSettingsContext";
+import { formatPhoneDisplay, toTelLink } from "@/lib/site";
 
 export default function Footer() {
+  const { companyName, phoneNumber, address } = useSiteSettings();
+  const phoneDisplay = formatPhoneDisplay(phoneNumber);
+  const telLink = toTelLink(phoneNumber);
   const currentYear = new Date().getFullYear();
 
   const scrollToSection = (id: string) => {
@@ -72,12 +77,10 @@ export default function Footer() {
           <div className="md:col-span-3 space-y-3">
             <h4 className="text-sm font-bold text-white uppercase tracking-wider">Contact Us</h4>
             <div className="text-sm space-y-2 text-slate-400 leading-relaxed">
-              <p>
-                Road No:- 2, Dwarika Puri, House no:- 281, Hanuman Nagar, Kankarbagh, Patna, Bihar 800020
-              </p>
+              <p>{address}</p>
               <p className="pt-1">
-                <a href="tel:+919525989736" className="text-brand-400 hover:underline font-semibold">
-                  +91 952598 9736
+                <a href={telLink} className="text-brand-400 hover:underline font-semibold">
+                  {phoneDisplay}
                 </a>
               </p>
             </div>
@@ -87,7 +90,7 @@ export default function Footer() {
 
         {/* Footer Bottom */}
         <div className="pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-slate-500">
-          <p>© {currentYear} Ganga Dental Clinic. All rights reserved.</p>
+          <p>© {currentYear} {companyName}. All rights reserved.</p>
           <p className="mt-4 md:mt-0">Designed for dental care excellence.</p>
         </div>
 
