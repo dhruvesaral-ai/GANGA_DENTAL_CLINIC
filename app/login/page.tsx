@@ -1,16 +1,14 @@
 "use client";
 
-import { FormEvent, Suspense, useState } from "react";
+import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Loader2, Lock } from "lucide-react";
 import ClinicName from "@/components/ClinicName";
 import ApiMethod from "@/services/api-method";
 
-function LoginForm() {
+export default function LoginPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const from = searchParams.get("from");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,17 +27,14 @@ function LoginForm() {
         const detail =
           typeof result.error === "string" ? result.error : undefined;
         setError(
-          detail ? `${result.message || "Login failed"}: ${detail}` : result.message || "Login failed"
+          detail
+            ? `${result.message || "Login failed"}: ${detail}`
+            : result.message || "Login failed"
         );
         return;
       }
 
-      const role = result.data?.user?.role;
-      if (role === "admin") {
-        router.replace(from && from.startsWith("/admin") ? from : "/admin");
-      } else {
-        router.replace("/");
-      }
+      router.replace("/admin");
       router.refresh();
     } catch {
       setError("Something went wrong. Please try again.");
@@ -129,19 +124,5 @@ function LoginForm() {
         </div>
       </div>
     </div>
-  );
-}
-
-export default function LoginPage() {
-  return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen flex items-center justify-center bg-slate-50">
-          <Loader2 className="w-8 h-8 animate-spin text-brand-600" />
-        </div>
-      }
-    >
-      <LoginForm />
-    </Suspense>
   );
 }

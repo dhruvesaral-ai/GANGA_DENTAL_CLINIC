@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LayoutDashboard, Stethoscope, CalendarDays } from "lucide-react";
+import { LayoutDashboard, Stethoscope, CalendarDays, Search, Settings } from "lucide-react";
 import ClinicName from "@/components/ClinicName";
 import AdminLogoutButton from "@/components/admin/AdminLogoutButton";
 
@@ -7,12 +7,14 @@ const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/appointments", label: "Appointments", icon: CalendarDays },
   { href: "/admin/treatments", label: "Treatments", icon: Stethoscope },
+  { href: "/admin/seo", label: "Manage SEO", icon: Search },
+  { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-slate-100 font-sans">
-      <div className="flex min-h-screen">
+    <div className="h-screen bg-slate-100 font-sans overflow-hidden">
+      <div className="flex h-screen overflow-hidden">
         <aside className="hidden md:flex w-64 flex-col bg-slate-900 text-white shrink-0">
           <div className="p-6 border-b border-slate-800">
             <ClinicName variant="light" />
@@ -64,7 +66,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             ))}
           </nav>
 
-          <main className="flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
+          <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">{children}</main>
         </div>
       </div>
     </div>

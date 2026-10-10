@@ -6,9 +6,7 @@ export async function middleware(request: NextRequest) {
   const session = token ? await verifySessionToken(token) : null;
 
   if (!session || session.role !== "admin") {
-    const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("from", request.nextUrl.pathname);
-    return NextResponse.redirect(loginUrl);
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   return NextResponse.next();
