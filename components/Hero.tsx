@@ -3,25 +3,12 @@
 import Image from "next/image";
 import { Phone, Calendar, Star, Award, ShieldCheck, HeartPulse } from "lucide-react";
 import { useSiteSettings } from "@/contexts/SiteSettingsContext";
+import { useBookAppointmentAction } from "@/contexts/AppointmentModalContext";
 import { toTelLink } from "@/lib/site";
 
 export default function Hero() {
   const { companyName, phoneNumber } = useSiteSettings();
-  const scrollToContact = () => {
-    const element = document.getElementById("contact");
-    if (element) {
-      const offset = 80;
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
-    }
-  };
+  const bookAppointment = useBookAppointmentAction();
 
   return (
     <section className="relative overflow-hidden bg-slate-50/60 dark:bg-slate-950 pt-8 pb-16 md:pb-24">
@@ -54,7 +41,8 @@ export default function Hero() {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
               <button
-                onClick={scrollToContact}
+                type="button"
+                onClick={bookAppointment}
                 className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 bg-brand-600 hover:bg-brand-700 text-white px-8 py-3.5 rounded-full text-base font-bold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
               >
                 <Calendar className="w-5 h-5" />

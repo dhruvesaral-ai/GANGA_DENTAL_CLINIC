@@ -11,6 +11,7 @@ import Footer from "@/components/Footer";
 import PageVisitTracker from "@/components/PageVisitTracker";
 import FloatingContactButtons from "@/components/FloatingContactButtons";
 import { SiteSettingsProvider } from "@/contexts/SiteSettingsContext";
+import { AppointmentModalProvider } from "@/contexts/AppointmentModalContext";
 import { getSiteSettings } from "@/lib/site-settings-server";
 import { DEFAULT_SITE_SETTINGS } from "@/lib/site";
 
@@ -25,6 +26,7 @@ export default async function Home() {
 
   return (
     <SiteSettingsProvider settings={siteSettings}>
+      <AppointmentModalProvider>
       <div className="min-h-screen flex flex-col bg-white dark:bg-slate-950 font-sans">
         <PageVisitTracker />
         <Header />
@@ -43,6 +45,7 @@ export default async function Home() {
         <Footer />
         <FloatingContactButtons />
       </div>
+      </AppointmentModalProvider>
     </SiteSettingsProvider>
   );
 }
