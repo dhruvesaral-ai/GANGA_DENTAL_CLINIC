@@ -2,6 +2,13 @@ import { connectDB } from "@/lib/db";
 import { jsonError, jsonSuccess } from "@/lib/api";
 import { EnquiryModel } from "@/models/EnquiryModel";
 import { TreatmentModel } from "@/models/TreatmentModel";
+import { UserModel } from "@/models/UserModel";
+import {
+  sendEnquiryConfirmationToPatient,
+  sendNewEnquiryAlertToAdmins,
+} from "@/lib/enquiry-emails";
+import { getSiteSettings } from "@/lib/site-settings-server";
+import { isValidEmail, normalizeEmail } from "@/lib/validate-email";
 import mongoose from "mongoose";
 import { NextRequest } from "next/server";
 
@@ -9,14 +16,25 @@ export async function POST(request: NextRequest) {
   try {
     await connectDB();
 
-    const { name, phone, message, preferredTreatment, preferredDate } =
+    const { name, email, phone, message, preferredTreatment, preferredDate } =
       await request.json();
 
-    if (!name?.trim() || !phone?.trim() || !preferredTreatment || !preferredDate) {
+    if (
+      !name?.trim() ||
+      !email?.trim() ||
+      !phone?.trim() ||
+      !preferredTreatment ||
+      !preferredDate
+    ) {
       return jsonError(
-        "name, phone, preferredTreatment, and preferredDate are required",
+        "name, email, phone, preferredTreatment, and preferredDate are required",
         400
       );
+    }
+
+    const patientEmail = normalizeEmail(email);
+    if (!isValidEmail(patientEmail)) {
+      return jsonError("Please enter a valid email address", 400);
     }
 
     if (!mongoose.Types.ObjectId.isValid(preferredTreatment)) {
@@ -33,13 +51,44 @@ export async function POST(request: NextRequest) {
       return jsonError("Treatment not found", 404);
     }
 
-    const enquiry = await EnquiryModel.create({
-      name: name.trim(),
+    const site = await getSiteSettings();
+    const enquiryDetails = {
+      companyName: site.companyName,
+      patientName: name.trim(),
+      patientEmail,
       phone: phone.trim(),
+      treatmentName: treatment.name,
+      preferredDate: parsedDate,
       message: message?.trim() ?? "",
+    };
+
+    const patientMail = await sendEnquiryConfirmationToPatient(enquiryDetails);
+    if (!patientMail.ok) {
+      return jsonError(
+        "We could not send a confirmation to this email. Please check the address and try again.",
+        400,
+        patientMail.error
+      );
+    }
+
+    const enquiry = await EnquiryModel.create({
+      name: enquiryDetails.patientName,
+      email: patientEmail,
+      phone: enquiryDetails.phone,
+      message: enquiryDetails.message,
       preferredTreatment: treatment._id,
       preferredDate: parsedDate,
     });
+
+    const admins = await UserModel.find({ role: "admin" }).select("email").lean();
+    const adminEmails = admins
+      .map((admin) => admin.email?.trim().toLowerCase())
+      .filter((value): value is string => Boolean(value));
+
+    const adminMail = await sendNewEnquiryAlertToAdmins(adminEmails, enquiryDetails);
+    if (!adminMail.ok) {
+      console.error("Admin enquiry alert email failed:", adminMail.error);
+    }
 
     return jsonSuccess(
       {

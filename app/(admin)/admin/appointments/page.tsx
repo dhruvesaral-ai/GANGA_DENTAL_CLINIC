@@ -9,6 +9,7 @@ type AppointmentStatus = "pending" | "confirmed" | "cancelled";
 type Appointment = {
   _id: string;
   name: string;
+  email: string;
   phone: string;
   message: string;
   preferredDate: string;
@@ -157,6 +158,11 @@ export default function AdminAppointmentsPage() {
                           <Phone className="w-3 h-3" />
                           {appointment.phone}
                         </a>
+                        {appointment.email && (
+                          <p className="mt-0.5 text-xs text-slate-500 truncate max-w-xs">
+                            {appointment.email}
+                          </p>
+                        )}
                         {appointment.message && (
                           <p className="mt-1 text-xs text-slate-400 max-w-xs truncate">
                             {appointment.message}
@@ -235,6 +241,17 @@ export default function AdminAppointmentsPage() {
               <div>
                 <dt className="font-semibold text-slate-500">Patient</dt>
                 <dd className="mt-0.5 text-slate-900 font-medium">{selected.name}</dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-slate-500">Email</dt>
+                <dd className="mt-0.5">
+                  <a
+                    href={`mailto:${selected.email}`}
+                    className="text-brand-600 font-medium break-all"
+                  >
+                    {selected.email || "—"}
+                  </a>
+                </dd>
               </div>
               <div>
                 <dt className="font-semibold text-slate-500">Phone</dt>
