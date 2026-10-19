@@ -36,6 +36,7 @@ export default function AppointmentEnquiryForm({
 
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [lastSubmittedWithEmail, setLastSubmittedWithEmail] = useState(false);
 
   useEffect(() => {
     ApiMethod.get("/api/treatments")
@@ -62,17 +63,13 @@ export default function AppointmentEnquiryForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (
-      !formData.name ||
-      !formData.email ||
-      !formData.phone ||
-      !formData.date ||
-      !formData.preferredTreatment
-    ) {
+    if (!formData.name || !formData.phone || !formData.date || !formData.preferredTreatment) {
       setStatus("error");
       setErrorMessage("Please fill out all required fields marked with *");
       return;
     }
+
+    const emailTrimmed = formData.email.trim();
 
     setStatus("submitting");
     setErrorMessage("");
@@ -80,7 +77,7 @@ export default function AppointmentEnquiryForm({
     try {
       const result = await ApiMethod.post("/api/book-appointment", {
         name: formData.name,
-        email: formData.email,
+        email: emailTrimmed,
         phone: formData.phone,
         message: formData.message,
         preferredTreatment: formData.preferredTreatment,
@@ -98,6 +95,7 @@ export default function AppointmentEnquiryForm({
         return;
       }
 
+      setLastSubmittedWithEmail(Boolean(emailTrimmed));
       setStatus("success");
       setFormData({
         name: "",
@@ -128,8 +126,11 @@ export default function AppointmentEnquiryForm({
           Appointment Requested!
         </h3>
         <p className="text-slate-500 dark:text-slate-400 max-w-md mx-auto text-sm sm:text-base">
-          Thank you for scheduling your visit at {companyName}. A confirmation was sent to your
-          email. Our clinic manager will call you shortly to confirm your appointment slot.
+          Thank you for scheduling your visit at {companyName}. Our clinic manager will call you
+          shortly to confirm your appointment slot.
+          {lastSubmittedWithEmail
+            ? " You will also receive an email when your appointment is confirmed."
+            : ""}
         </p>
         <button
           type="button"
@@ -171,19 +172,22 @@ export default function AppointmentEnquiryForm({
             htmlFor={fieldId("email")}
             className="block text-sm font-semibold text-slate-700 dark:text-slate-350"
           >
-            Email Address *
+            Email Address (optional)
           </label>
           <input
             type="email"
             id={fieldId("email")}
             name="email"
-            required
             autoComplete="email"
             placeholder="e.g. you@example.com"
             value={formData.email}
             onChange={handleChange}
             className="w-full p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-850 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow"
           />
+          <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            If you add your email, we will automatically notify you when your appointment is
+            confirmed.
+          </p>
         </div>
       </div>
 

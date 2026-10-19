@@ -13,7 +13,7 @@ export type SiteSettings = {
 };
 
 export const DEFAULT_SITE_SETTINGS: SiteSettings = {
-  companyName: "Ganga Dental Clinic",
+  companyName: "Ganga Dental Care",
   phoneNumber: "+918178116441",
   whatsappNumber: "+918178116441",
   address:

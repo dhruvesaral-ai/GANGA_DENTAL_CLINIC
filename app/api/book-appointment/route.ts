@@ -19,21 +19,16 @@ export async function POST(request: NextRequest) {
     const { name, email, phone, message, preferredTreatment, preferredDate } =
       await request.json();
 
-    if (
-      !name?.trim() ||
-      !email?.trim() ||
-      !phone?.trim() ||
-      !preferredTreatment ||
-      !preferredDate
-    ) {
+    if (!name?.trim() || !phone?.trim() || !preferredTreatment || !preferredDate) {
       return jsonError(
-        "name, email, phone, preferredTreatment, and preferredDate are required",
+        "name, phone, preferredTreatment, and preferredDate are required",
         400
       );
     }
 
-    const patientEmail = normalizeEmail(email);
-    if (!isValidEmail(patientEmail)) {
+    const rawEmail = typeof email === "string" ? email.trim() : "";
+    const patientEmail = rawEmail ? normalizeEmail(rawEmail) : "";
+    if (patientEmail && !isValidEmail(patientEmail)) {
       return jsonError("Please enter a valid email address", 400);
     }
 
@@ -62,13 +57,15 @@ export async function POST(request: NextRequest) {
       message: message?.trim() ?? "",
     };
 
-    const patientMail = await sendEnquiryConfirmationToPatient(enquiryDetails);
-    if (!patientMail.ok) {
-      return jsonError(
-        "We could not send a confirmation to this email. Please check the address and try again.",
-        400,
-        patientMail.error
-      );
+    if (patientEmail) {
+      const patientMail = await sendEnquiryConfirmationToPatient(enquiryDetails);
+      if (!patientMail.ok) {
+        return jsonError(
+          "We could not send a confirmation to this email. Please check the address and try again.",
+          400,
+          patientMail.error
+        );
+      }
     }
 
     const enquiry = await EnquiryModel.create({

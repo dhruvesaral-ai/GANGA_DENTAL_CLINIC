@@ -2,6 +2,7 @@
 
 import { createContext, useContext } from "react";
 import type { SiteSettings } from "@/lib/site";
+import { DEFAULT_SITE_SETTINGS } from "@/lib/site";
 
 const SiteSettingsContext = createContext<SiteSettings | null>(null);
 
@@ -25,4 +26,10 @@ export function useSiteSettings(): SiteSettings {
   }
 
   return settings;
+}
+
+/** Use on pages without SiteSettingsProvider (e.g. login); falls back to defaults. */
+export function useSiteSettingsWithDefaults(): SiteSettings {
+  const settings = useContext(SiteSettingsContext);
+  return settings ?? DEFAULT_SITE_SETTINGS;
 }

@@ -1,6 +1,10 @@
 import { connectDB } from "@/lib/db";
 import { jsonError, jsonSuccess } from "@/lib/api";
 import { EnquiryModel } from "@/models/EnquiryModel";
+import {
+  sendAppointmentConfirmedToPatient,
+} from "@/lib/enquiry-emails";
+import { getSiteSettings } from "@/lib/site-settings-server";
 import mongoose from "mongoose";
 import { NextRequest } from "next/server";
 
@@ -24,6 +28,16 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
       return jsonError("status must be pending, confirmed, or cancelled", 400);
     }
 
+    const existing = await EnquiryModel.findById(id)
+      .populate({ path: "preferredTreatment", select: "name" })
+      .lean();
+
+    if (!existing) {
+      return jsonError("Appointment not found", 404);
+    }
+
+    const previousStatus = existing.status ?? "pending";
+
     const appointment = await EnquiryModel.findByIdAndUpdate(
       id,
       { status },
@@ -34,6 +48,34 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
 
     if (!appointment) {
       return jsonError("Appointment not found", 404);
+    }
+
+    if (
+      status === "confirmed" &&
+      previousStatus !== "confirmed" &&
+      appointment.email?.trim()
+    ) {
+      const site = await getSiteSettings();
+      const treatment =
+        appointment.preferredTreatment &&
+        typeof appointment.preferredTreatment === "object" &&
+        "name" in appointment.preferredTreatment
+          ? String(appointment.preferredTreatment.name)
+          : "Treatment";
+
+      const mail = await sendAppointmentConfirmedToPatient({
+        companyName: site.companyName,
+        patientName: appointment.name,
+        patientEmail: appointment.email.trim(),
+        phone: appointment.phone,
+        treatmentName: treatment,
+        preferredDate: new Date(appointment.preferredDate),
+        message: appointment.message ?? "",
+      });
+
+      if (!mail.ok) {
+        console.error("Appointment confirmed email failed:", mail.error);
+      }
     }
 
     return jsonSuccess({
