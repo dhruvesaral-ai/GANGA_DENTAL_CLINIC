@@ -26,10 +26,29 @@ class ApiMethod {
         return response.json();
     }
 
+    static async patch(url: string, data: unknown) {
+        const response = await fetch(url, {
+            ...fetchOptions,
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        });
+        return response.json();
+    }
+
     static async delete(url: string) {
         const response = await fetch(url, {
             ...fetchOptions,
             method: "DELETE",
+        });
+        return response.json();
+    }
+
+    static async upload(url: string, formData: FormData) {
+        const response = await fetch(url, {
+            ...fetchOptions,
+            method: "POST",
+            body: formData,
         });
         return response.json();
     }

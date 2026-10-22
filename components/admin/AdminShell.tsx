@@ -11,6 +11,7 @@ import {
   Settings,
   Menu,
   X,
+  Images,
 } from "lucide-react";
 import ClinicName from "@/components/ClinicName";
 import AdminLogoutButton from "@/components/admin/AdminLogoutButton";
@@ -19,6 +20,7 @@ const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/appointments", label: "Appointments", icon: CalendarDays },
   { href: "/admin/treatments", label: "Treatments", icon: Stethoscope },
+  { href: "/admin/gallery", label: "Gallery & Media", icon: Images },
   { href: "/admin/seo", label: "Manage SEO", icon: Search },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
