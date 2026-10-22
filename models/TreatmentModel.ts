@@ -9,6 +9,10 @@ const treatmentSchema = new mongoose.Schema({
         type: Boolean,
         default: true,
     },
+    imageUrl: {
+        type: String,
+        default: null,
+    },
 }, { timestamps: true });
 
 export const TreatmentModel =

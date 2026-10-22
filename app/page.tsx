@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Stats from "@/components/Stats";
 import TechSection from "@/components/TechSection";
+import TreatmentMarquee from "@/components/TreatmentMarquee";
 import Gallery from "@/components/Gallery";
 import Reviews from "@/components/Reviews";
 import FAQ from "@/components/FAQ";
@@ -33,8 +34,9 @@ export default async function Home() {
         <main className="flex-1">
           <Hero />
           <Stats />
-          <TechSection />
+          <TreatmentMarquee />
           <Gallery />
+          <TechSection />
           <Reviews />
           <FAQ />
           <Contact />

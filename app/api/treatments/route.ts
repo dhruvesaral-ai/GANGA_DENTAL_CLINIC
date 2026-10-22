@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const filter = showAll ? {} : { isActive: true };
 
     const treatments = await TreatmentModel.find(filter)
-      .select("name isActive createdAt updatedAt")
+      .select("name isActive imageUrl createdAt updatedAt")
       .sort({ name: 1 })
       .lean();
 
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
   try {
     await connectDB();
 
-    const { name, isActive } = await request.json();
+    const { name, isActive, imageUrl } = await request.json();
 
     if (!name?.trim()) {
       return jsonError("name is required", 400);
@@ -35,6 +35,9 @@ export async function POST(request: NextRequest) {
     const treatment = await TreatmentModel.create({
       name: name.trim(),
       ...(typeof isActive === "boolean" ? { isActive } : {}),
+      ...(typeof imageUrl === "string" && imageUrl.trim()
+        ? { imageUrl: imageUrl.trim() }
+        : {}),
     });
 
     return jsonSuccess(treatment, 201);

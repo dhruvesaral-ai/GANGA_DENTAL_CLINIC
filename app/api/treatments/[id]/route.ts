@@ -1,6 +1,7 @@
 import { connectDB } from "@/lib/db";
 import { jsonError, jsonSuccess } from "@/lib/api";
 import { TreatmentModel } from "@/models/TreatmentModel";
+import { deleteUploadedImage } from "@/lib/multer";
 import mongoose from "mongoose";
 import { NextRequest } from "next/server";
 
@@ -16,23 +17,43 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
       return jsonError("Invalid treatment id", 400);
     }
 
-    const { name, isActive } = await request.json();
+    const { name, isActive, imageUrl } = await request.json();
 
     if (!name?.trim()) {
       return jsonError("name is required", 400);
     }
+
+    const existing = await TreatmentModel.findById(id).select("imageUrl").lean();
+
+    if (!existing) {
+      return jsonError("Treatment not found", 404);
+    }
+
+    const nextImageUrl =
+      typeof imageUrl === "string" ? imageUrl.trim() || null : undefined;
 
     const treatment = await TreatmentModel.findByIdAndUpdate(
       id,
       {
         name: name.trim(),
         ...(typeof isActive === "boolean" ? { isActive } : {}),
+        ...(nextImageUrl !== undefined ? { imageUrl: nextImageUrl } : {}),
       },
       { new: true, runValidators: true }
     ).lean();
 
     if (!treatment) {
       return jsonError("Treatment not found", 404);
+    }
+
+    // Clean up the previous image file when it is replaced or removed.
+    if (
+      nextImageUrl !== undefined &&
+      existing.imageUrl &&
+      existing.imageUrl !== nextImageUrl &&
+      existing.imageUrl.startsWith("/uploads/")
+    ) {
+      await deleteUploadedImage(existing.imageUrl);
     }
 
     return jsonSuccess(treatment);
