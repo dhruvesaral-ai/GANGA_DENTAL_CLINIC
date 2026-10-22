@@ -43,7 +43,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   }, [sidebarOpen]);
 
   return (
-    <div className="h-screen bg-slate-100 font-sans overflow-hidden">
+    <div className="h-screen bg-slate-100 font-sans overflow-hidden text-slate-900">
       <div className="flex h-screen overflow-hidden">
         <aside className="hidden md:flex w-64 flex-col bg-slate-900 text-white shrink-0">
           <div className="p-6 border-b border-slate-800">

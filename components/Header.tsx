@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { Menu, X, Phone, Calendar, LayoutDashboard, LogIn } from "lucide-react";
 import ClinicName from "@/components/ClinicName";
 import ApiMethod from "@/services/api-method";
@@ -15,6 +16,8 @@ type AuthUser = {
 };
 
 export default function Header() {
+  const router = useRouter();
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
@@ -54,7 +57,10 @@ export default function Header() {
       const offset = 80;
       const top = element.getBoundingClientRect().top + window.scrollY - offset;
       window.scrollTo({ top, behavior: "smooth" });
+      return;
     }
+    // Section lives on the home page; navigate there from other routes.
+    router.push(`/#${id}`);
   };
 
   const handleBookAppointment = () => {
@@ -74,7 +80,13 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <div
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              onClick={() => {
+                if (pathname === "/") {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                } else {
+                  router.push("/");
+                }
+              }}
               className="flex items-center cursor-pointer group"
             >
               <ClinicName />

@@ -306,10 +306,14 @@ export default function AdminGalleryPage() {
                 onChange={(e) =>
                   setPosition(e.target.value as "home-carousal" | "gallery")
                 }
-                className="w-full p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white"
+                className="w-full p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white text-slate-900"
               >
-                <option value="gallery">Clinic Gallery (/gallery)</option>
-                <option value="home-carousal">Home Carousel (Hero Slider)</option>
+                <option value="gallery" className="text-slate-900">
+                  Clinic Gallery (/gallery)
+                </option>
+                <option value="home-carousal" className="text-slate-900">
+                  Home Carousel (Hero Slider)
+                </option>
               </select>
               <p className="text-xs text-slate-400 mt-1">
                 Select where this image should be shown on the website.

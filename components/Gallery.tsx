@@ -1,28 +1,7 @@
 import Image from "next/image";
-
-const images = [
-  {
-    src: "/ganga_dental_care_outer_view.jpeg",
-    alt: "Ganga Dental Care clinic exterior",
-    className: "min-h-[280px] md:min-h-0 md:row-span-2",
-    tag: "Ganga Dental Clinic",
-    title: "Our Clinic Exterior",
-  },
-  {
-    src: "/ganga_Dental_Care_reception_Desk.jpeg",
-    alt: "Ganga Dental Care reception desk",
-    className: "min-h-[220px] md:min-h-0",
-    tag: "Welcome",
-    title: "Reception Desk",
-  },
-  {
-    src: "/ganga_Dental_Care_main_Desk_with_doctor_sitting.jpeg",
-    alt: "Doctor at Ganga Dental Care main desk",
-    className: "min-h-[220px] md:min-h-0",
-    tag: "Expert Care",
-    title: "Meet Our Dental Team",
-  },
-];
+import Link from "next/link";
+import { ArrowRight, Images } from "lucide-react";
+import { FACILITY_PHOTOS } from "@/lib/facility-gallery";
 
 export default function Gallery() {
   return (
@@ -41,7 +20,7 @@ export default function Gallery() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-6 md:h-[620px]">
-          {images.map((image) => (
+          {FACILITY_PHOTOS.map((image) => (
             <div
               key={image.src}
               className={`relative h-full group overflow-hidden rounded-[2rem] shadow-lg border border-slate-100 dark:border-slate-800 ${image.className}`}
@@ -65,6 +44,17 @@ export default function Gallery() {
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="mt-10 md:mt-12 text-center">
+          <Link
+            href="/gallery"
+            className="inline-flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white px-8 py-3.5 rounded-full text-base font-bold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
+          >
+            <Images className="w-5 h-5" />
+            <span>View More Photos</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
       </div>
     </section>

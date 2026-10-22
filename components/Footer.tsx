@@ -1,10 +1,12 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import ClinicName from "@/components/ClinicName";
 import { useSiteSettings } from "@/contexts/SiteSettingsContext";
 import { formatPhoneDisplay, toTelLink } from "@/lib/site";
 
 export default function Footer() {
+  const router = useRouter();
   const { companyName, phoneNumber, address } = useSiteSettings();
   const phoneDisplay = formatPhoneDisplay(phoneNumber);
   const telLink = toTelLink(phoneNumber);
@@ -23,7 +25,10 @@ export default function Footer() {
         top: offsetPosition,
         behavior: "smooth",
       });
+      return;
     }
+    // Section lives on the home page; navigate there from other routes.
+    router.push(`/#${id}`);
   };
 
   return (

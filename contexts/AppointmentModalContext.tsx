@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
 import AppointmentEnquiryForm from "@/components/AppointmentEnquiryForm";
 
@@ -87,6 +88,7 @@ export function useAppointmentModal() {
 /** Opens modal on small screens; scrolls to contact on md+. */
 export function useBookAppointmentAction() {
   const { openAppointmentModal } = useAppointmentModal();
+  const router = useRouter();
 
   return useCallback(() => {
     if (typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches) {
@@ -98,6 +100,9 @@ export function useBookAppointmentAction() {
       const offset = 80;
       const top = element.getBoundingClientRect().top + window.scrollY - offset;
       window.scrollTo({ top, behavior: "smooth" });
+      return;
     }
-  }, [openAppointmentModal]);
+    // Contact section lives on the home page; navigate there from other routes.
+    router.push("/#contact");
+  }, [openAppointmentModal, router]);
 }
